@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Degree Clearance – University Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet" />
+
+    <style>
+        /* ── CSS Variables (Light & Dark) ── */
+        :root {
+            --bg-primary: #f0f4fe;
+            --text-primary: #0b1a33;
+            --text-secondary: #2d4270;
+            --text-muted: #5a6f94;
+            --glass-bg: rgba(255, 255, 255, 0.60);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.5);
+            --glass-shadow: 0 20px 60px rgba(11, 30, 74, 0.06);
+            --card-bg: rgba(255, 255, 255, 0.45);
+            --link-color: #2a5bc7;
+            --link-hover: #1a3a8a;
+            --border-radius-card: 24px;
+            --header-gradient: linear-gradient(135deg, #0b1e4a 0%, #1a3a8a 50%, #2a5bc7 100%);
+            --header-text: #ffffff;
+            --badge-pending-bg: #fef3c7;
+            --badge-pending-text: #92400e;
+            --badge-review-bg: #cfe2ff;
+            --badge-review-text: #084298;
+            --badge-approved-bg: #d1e7dd;
+            --badge-approved-text: #0f5132;
+            --badge-rejected-bg: #f8d7da;
+            --badge-rejected-text: #842029;
+            --btn-bg: linear-gradient(135deg, #1a3a8a, #2a5bc7);
+            --btn-hover: linear-gradient(135deg, #2a5bc7, #4a7cf7);
+            --btn-text: #fff;
+            --success-bg: rgba(22, 163, 74, 0.08);
+            --success-border: #16a34a;
+            --success-text: #0f5132;
+            --warning-bg: rgba(255, 193, 7, 0.08);
+            --warning-border: #f59e0b;
+            --warning-text: #664d03;
+            --danger-bg: rgba(220, 38, 38, 0.08);
+            --danger-border: #dc2626;
+            --danger-text: #842029;
+            --student-info-bg: rgba(255, 255, 255, 0.30);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0a1225;
+            --text-primary: #e8edf9;
+            --text-secondary: #b0c4e8;
+            --text-muted: #7a8fb8;
+            --glass-bg: rgba(22, 34, 64, 0.70);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.06);
+            --glass-shadow: 0 20px 60px rgba(0, 0, 0, 0.40);
+            --card-bg: rgba(22, 34, 64, 0.40);
+            --link-color: #5a8cf7;
+            --link-hover: #7aa0ff;
+            --header-gradient: linear-gradient(135deg, #070e1f 0%, #0f2248 50%, #1a3570 100%);
+            --header-text: #e8edf9;
+            --badge-pending-bg: #4a3a1a;
+            --badge-pending-text: #ffcc77;
+            --badge-review-bg: #1a2a4a;
+            --badge-review-text: #77aaff;
+            --badge-approved-bg: #1a3a2a;
+            --badge-approved-text: #77dd99;
+            --badge-rejected-bg: #4a1a1a;
+            --badge-rejected-text: #ff7777;
+            --btn-bg: linear-gradient(135deg, #0f2248, #1a3570);
+            --btn-hover: linear-gradient(135deg, #1a3570, #2a5bc7);
+            --success-bg: rgba(74, 222, 128, 0.08);
+            --success-border: #4ade80;
+            --success-text: #77dd99;
+            --warning-bg: rgba(255, 204, 119, 0.08);
+            --warning-border: #ffcc77;
+            --warning-text: #ffcc77;
+            --danger-bg: rgba(255, 119, 119, 0.08);
+            --danger-border: #ff7777;
+            --danger-text: #ff7777;
+            --student-info-bg: rgba(255, 255, 255, 0.04);
+        }
+
+        /* ── Reset & Base ── */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            min-height: 100vh;
+            color: var(--text-primary);
+            transition: background 0.5s ease, color 0.4s ease;
+            padding: 0;
+            margin: 0;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* ── Animated Background ── */
+        .bg-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .bg-canvas .gradient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.20;
+            animation: floatOrb 22s ease-in-out infinite alternate;
+        }
+
+        .bg-canvas .gradient-orb:nth-child(1) {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, #4a7cf7, #1a3a8a);
+            top: -15%;
+            left: -10%;
+            animation-duration: 26s;
+        }
+
+        .bg-canvas .gradient-orb:nth-child(2) {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, #7c4af7, #3a1a8a);
+            bottom: -15%;
+            right: -10%;
+            animation-duration: 30s;
+            animation-delay: -8s;
+        }
+
+        .bg-canvas .gradient-orb:nth-child(3) {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, #f7b731, #f77a31);
+            top: 40%;
+            left: 60%;
+            animation-duration: 24s;
+            animation-delay: -4s;
+            opacity: 0.10;
+        }
+
+        [data-theme="dark"] .bg-canvas .gradient-orb:nth-child(1) {
+            opacity: 0.12;
+            background: radial-gradient(circle, #2a5bc7, #0f2248);
+        }
+        [data-theme="dark"] .bg-canvas .gradient-orb:nth-child(2) {
+            opacity: 0.10;
+            background: radial-gradient(circle, #5a3bc7, #1a0f48);
+        }
+        [data-theme="dark"] .bg-canvas .gradient-orb:nth-child(3) {
+            opacity: 0.06;
+        }
+
+        @keyframes floatOrb {
+            0% {
+                transform: translate(0, 0) scale(1) rotate(0deg);
+            }
+            33% {
+                transform: translate(50px, -30px) scale(1.05) rotate(5deg);
+            }
+            66% {
+                transform: translate(-20px, 30px) scale(0.95) rotate(-3deg);
+            }
+            100% {
+                transform: translate(30px, -10px) scale(1.02) rotate(2deg);
+            }
+        }
+
+        .bg-canvas::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.02) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(255, 255, 255, 0.02) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        /* ── Header ── */
+        .header {
+            background: var(--header-gradient);
+            color: var(--header-text);
+            padding: 14px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            transition: background 0.5s ease;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-weight: 800;
+            font-size: 1.2rem;
+            letter-spacing: -0.4px;
+        }
+
+        .header-brand .logo-icon {
+            font-size: 1.6rem;
+            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
+        }
+
+        .header-brand .badge {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(8px);
+            padding: 4px 16px;
+            border-radius: 100px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .header-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            padding: 5px 18px 5px 20px;
+            border-radius: 100px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .header-user .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ffd966, #f7b731);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #0b1a33;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .theme-toggle {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 100px;
+            width: 46px;
+            height: 46px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.3rem;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            color: var(--header-text);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.18);
+            transform: scale(1.06) rotate(8deg);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        }
+
+        .theme-toggle:active {
+            transform: scale(0.92);
+        }
+
+        /* ── Main Container ── */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 32px 24px 60px;
+            animation: fadeInUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* ── Glass Card ── */
+        .clearance-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: var(--glass-border);
+            border-radius: var(--border-radius-card);
+            box-shadow: var(--glass-shadow);
+            padding: 36px 40px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .clearance-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: var(--border-radius-card);
+            background: radial-gradient(circle at 30% 20%, rgba(42, 91, 199, 0.04), transparent 60%);
+            pointer-events: none;
+        }
+
+        .clearance-card:hover {
+            box-shadow: 0 30px 80px rgba(11, 30, 74, 0.10);
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+
+        [data-theme="dark"] .clearance-card:hover {
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+        }
+
+        .clearance-card h1 {
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 4px;
+        }
+
+        .clearance-card .sub {
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin-bottom: 22px;
+        }
+
+        /* ── Student Info ── */
+        .student-info {
+            background: var(--student-info-bg);
+            backdrop-filter: blur(4px);
+            padding: 18px 22px;
+            border-radius: 16px;
+            margin-bottom: 26px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px 24px;
+        }
+
+        .student-info .info-item {
+            display: flex;
+            flex-direction: column;
+            padding: 2px 0;
+        }
+
+        .student-info .info-item .label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--text-muted);
+        }
+
+        .student-info .info-item .value {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* ── Status Badge ── */
+        .status-badge {
+            display: inline-block;
+            padding: 5px 18px;
+            border-radius: 100px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            letter-spacing: 0.3px;
+        }
+
+        .status-badge.pending {
+            background: var(--badge-pending-bg);
+            color: var(--badge-pending-text);
+        }
+        .status-badge.review {
+            background: var(--badge-review-bg);
+            color: var(--badge-review-text);
+        }
+        .status-badge.approved {
+            background: var(--badge-approved-bg);
+            color: var(--badge-approved-text);
+        }
+        .status-badge.rejected {
+            background: var(--badge-rejected-bg);
+            color: var(--badge-rejected-text);
+        }
+
+        /* ── Status Messages ── */
+        .status-msg {
+            padding: 16px 20px;
+            border-radius: 14px;
+            font-weight: 500;
+            line-height: 1.6;
+            margin: 16px 0 20px;
+            border-left: 4px solid;
+        }
+
+        .status-msg.success {
+            background: var(--success-bg);
+            border-color: var(--success-border);
+            color: var(--success-text);
+        }
+
+        .status-msg.warning {
+            background: var(--warning-bg);
+            border-color: var(--warning-border);
+            color: var(--warning-text);
+        }
+
+        .status-msg.danger {
+            background: var(--danger-bg);
+            border-color: var(--danger-border);
+            color: var(--danger-text);
+        }
+
+        .status-msg.danger p {
+            margin-top: 6px;
+        }
+
+        /* ── Application Details ── */
+        .app-details {
+            margin: 16px 0 20px;
+        }
+
+        .app-details p {
+            margin: 6px 0;
+            font-size: 0.95rem;
+        }
+
+        .app-details p strong {
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-right: 6px;
+        }
+
+        /* ── Requirements List ── */
+        .requirements {
+            margin: 12px 0 16px;
+        }
+
+        .requirements h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .requirements ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .requirements ul li {
+            padding: 6px 0 6px 28px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235a6f94' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 8v4l3 3'/%3E%3C/svg%3E") left center no-repeat;
+            background-size: 18px;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        [data-theme="dark"] .requirements ul li {
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237a8fb8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 8v4l3 3'/%3E%3C/svg%3E") left center no-repeat;
+            background-size: 18px;
+        }
+
+        /* ── Buttons ── */
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 28px;
+            border: none;
+            border-radius: 100px;
+            background: var(--btn-bg);
+            color: var(--btn-text);
+            font-size: 0.95rem;
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 8px 24px rgba(26, 58, 138, 0.12);
+        }
+
+        .btn-primary:hover {
+            background: var(--btn-hover);
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 12px 32px rgba(26, 58, 138, 0.20);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.96);
+        }
+
+        [data-theme="dark"] .btn-primary {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+        }
+
+        [data-theme="dark"] .btn-primary:hover {
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 28px;
+            border-radius: 100px;
+            background: var(--card-bg);
+            color: var(--link-color);
+            font-size: 0.95rem;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 1px solid var(--glass-border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--glass-bg);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(11, 30, 74, 0.06);
+        }
+
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            align-items: center;
+            margin-top: 12px;
+        }
+
+        /* ── Back Link ── */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 28px;
+            color: var(--link-color);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            padding: 8px 16px;
+            border-radius: 100px;
+            background: rgba(42, 91, 199, 0.04);
+        }
+
+        .back-link:hover {
+            color: var(--link-hover);
+            background: rgba(42, 91, 199, 0.08);
+            transform: translateX(-4px);
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            .header {
+                padding: 12px 20px;
+            }
+            .header-brand {
+                font-size: 1rem;
+                gap: 10px;
+            }
+            .header-brand .logo-icon {
+                font-size: 1.3rem;
+            }
+            .header-brand .badge {
+                font-size: 0.5rem;
+                padding: 3px 12px;
+            }
+            .header-user {
+                font-size: 0.75rem;
+                padding: 4px 12px 4px 14px;
+                gap: 8px;
+            }
+            .header-user .avatar {
+                width: 28px;
+                height: 28px;
+                font-size: 0.7rem;
+            }
+            .theme-toggle {
+                width: 38px;
+                height: 38px;
+                font-size: 1.1rem;
+            }
+            .container {
+                padding: 16px 14px 40px;
+            }
+            .clearance-card {
+                padding: 24px 20px;
+                border-radius: 20px;
+            }
+            .clearance-card h1 {
+                font-size: 1.6rem;
+            }
+            .student-info {
+                grid-template-columns: 1fr;
+                gap: 4px;
+                padding: 14px 18px;
+            }
+            .student-info .info-item .value {
+                font-size: 0.9rem;
+            }
+            .app-details p {
+                font-size: 0.9rem;
+            }
+            .btn-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .btn-primary,
+            .btn-secondary {
+                justify-content: center;
+                text-align: center;
+            }
+            .back-link {
+                font-size: 0.85rem;
+                padding: 6px 14px;
+            }
+            .status-msg {
+                font-size: 0.9rem;
+                padding: 14px 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .clearance-card {
+                padding: 18px 14px;
+                border-radius: 18px;
+            }
+            .clearance-card h1 {
+                font-size: 1.3rem;
+            }
+            .clearance-card .sub {
+                font-size: 0.85rem;
+            }
+            .student-info {
+                padding: 12px 14px;
+            }
+            .student-info .info-item .value {
+                font-size: 0.85rem;
+            }
+            .app-details p {
+                font-size: 0.85rem;
+            }
+            .btn-primary,
+            .btn-secondary {
+                font-size: 0.9rem;
+                padding: 10px 20px;
+            }
+            .back-link {
+                font-size: 0.8rem;
+                padding: 6px 12px;
+            }
+            .status-badge {
+                font-size: 0.7rem;
+                padding: 4px 14px;
+            }
+            .status-msg {
+                font-size: 0.85rem;
+                padding: 12px 14px;
+            }
+            .requirements ul li {
+                font-size: 0.85rem;
+                padding: 4px 0 4px 24px;
+                background-size: 16px;
+            }
+        }
+
+        /* ── Scrollbar ── */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--text-muted);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ── Animated Background ── -->
+    <div class="bg-canvas">
+        <div class="gradient-orb"></div>
+        <div class="gradient-orb"></div>
+        <div class="gradient-orb"></div>
+    </div>
+
+    <!-- ===== HEADER ===== -->
+    <header class="header">
+        <div class="header-brand">
+            <span class="logo-icon">🎓</span>
+            University Portal
+            <span class="badge">Student</span>
+        </div>
+        <div class="header-actions">
+            <div class="header-user">
+                <span class="avatar">👤</span>
+                {{ student.user.get_full_name }}
+            </div>
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                <span id="themeIcon">🌙</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- ===== MAIN ===== -->
+    <div class="container">
+
+        <div class="clearance-card">
+
+            <h1>🎓 Degree Clearance</h1>
+            <div class="sub">Track your degree clearance application status</div>
+
+            <!-- Student Info -->
+            <div class="student-info">
+                <div class="info-item">
+                    <span class="label">Student</span>
+                    <span class="value">{{ student.user.get_full_name }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Student ID</span>
+                    <span class="value">{{ student.student_id }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Program</span>
+                    <span class="value">{{ student.program }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Department</span>
+                    <span class="value">{{ student.department }}</span>
+                </div>
+            </div>
+
+            <!-- Application Status -->
+            {% if application %}
+
+            <div class="app-details">
+                <p>
+                    <strong>Application Number:</strong>
+                    {{ application.application_number }}
+                </p>
+                <p>
+                    <strong>Status:</strong>
+                    {% if application.status == 'PENDING' %}
+                        <span class="status-badge pending">⏳ Pending</span>
+                    {% elif application.status == 'UNDER_REVIEW' %}
+                        <span class="status-badge review">🔄 Under Review</span>
+                    {% elif application.status == 'APPROVED' %}
+                        <span class="status-badge approved">✅ Approved</span>
+                    {% elif application.status == 'REJECTED' %}
+                        <span class="status-badge rejected">❌ Rejected</span>
+                    {% endif %}
+                </p>
+            </div>
+
+            <!-- Status Messages -->
+            {% if application.status == 'APPROVED' %}
+                <div class="status-msg success">
+                    🎉 Your degree clearance application has been approved.
+                </div>
+            {% elif application.status == 'REJECTED' %}
+                <div class="status-msg danger">
+                    <strong>Application Rejected</strong>
+                    {% if application.remarks %}
+                        <p>{{ application.remarks }}</p>
+                    {% endif %}
+                </div>
+            {% elif application.status == 'UNDER_REVIEW' %}
+                <div class="status-msg warning">
+                    Your degree clearance application is currently under review by the administration.
+                </div>
+            {% else %}
+                <div class="status-msg warning">
+                    Your degree clearance application has been submitted and is waiting for review.
+                </div>
+            {% endif %}
+
+            <div class="btn-group">
+                <a href="{% url 'degree_clearance:detail' application.id %}" class="btn-primary">
+                    View Application →
+                </a>
+            </div>
+
+            <!-- No Application -->
+            {% else %}
+
+                {% if eligible %}
+                    <div class="status-msg success">
+                        ✅ Congratulations!<br><br>
+                        Your 8th semester results are available and you are eligible to apply for degree clearance.
+                    </div>
+
+                    <div class="btn-group">
+                        <a href="{% url 'degree_clearance:apply' %}" class="btn-primary">
+                            Apply for Degree Clearance →
+                        </a>
+                    </div>
+
+                {% else %}
+                    <div class="status-msg warning">
+                        <strong>Degree Clearance is not available yet.</strong>
+                        <p>You are currently not eligible to apply.</p>
+                    </div>
+
+                    <div class="requirements">
+                        <h3>Requirements</h3>
+                        <ul>
+                            {% for reason in reasons %}
+                                <li>{{ reason }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+            {% endif %}
+
+            <!-- Back Link -->
+            <a href="{% url 'student_dashboard' %}" class="back-link">
+                ← Back to Dashboard
+            </a>
+
+        </div>
+
+    </div>
+
+    <script>
+        // ── Dark Mode Toggle ──
+        (function() {
+            const toggle = document.getElementById('themeToggle');
+            const icon = document.getElementById('themeIcon');
+            const currentTheme = localStorage.getItem('theme') || 'light';
+
+            if (currentTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                icon.textContent = '☀️';
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                icon.textContent = '🌙';
+            }
+
+            toggle.addEventListener('click', function() {
+                const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+                if (isDark) {
+                    document.documentElement.removeAttribute('data-theme');
+                    localStorage.setItem('theme', 'light');
+                    icon.textContent = '🌙';
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    localStorage.setItem('theme', 'dark');
+                    icon.textContent = '☀️';
+                }
+                toggle.style.transform = 'scale(0.92)';
+                setTimeout(() => {
+                    toggle.style.transform = '';
+                }, 200);
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.altKey && e.key === 'd') {
+                    e.preventDefault();
+                    toggle.click();
+                }
+            });
+        })();
+    </script>
+
+</body>
+
+</html>

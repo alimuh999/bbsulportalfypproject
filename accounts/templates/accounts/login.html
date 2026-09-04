@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Benazir Bhutto Shaheed University – Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet" />
+
+    <style>
+        /* ── CSS Variables (Light & Dark) ── */
+        :root {
+            --bg-primary: #f0f4fe;
+            --bg-secondary: #ffffff;
+            --glass-bg: rgba(255, 255, 255, 0.55);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.5);
+            --glass-shadow: 0 20px 60px rgba(11, 30, 74, 0.08);
+            --text-primary: #0b1a33;
+            --text-secondary: #2d4270;
+            --text-muted: #5a6f94;
+            --input-bg: rgba(255, 255, 255, 0.7);
+            --input-border: rgba(255, 255, 255, 0.3);
+            --input-focus-border: #2a5bc7;
+            --btn-bg: linear-gradient(135deg, #1a3a8a, #2a5bc7);
+            --btn-hover: linear-gradient(135deg, #2a5bc7, #4a7cf7);
+            --error-bg: rgba(254, 226, 226, 0.7);
+            --error-text: #b91c1c;
+            --error-border: #d42e2e;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0a1225;
+            --bg-secondary: #162240;
+            --glass-bg: rgba(22, 34, 64, 0.70);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.06);
+            --glass-shadow: 0 20px 60px rgba(0, 0, 0, 0.40);
+            --text-primary: #e8edf9;
+            --text-secondary: #b0c4e8;
+            --text-muted: #7a8fb8;
+            --input-bg: rgba(255, 255, 255, 0.06);
+            --input-border: rgba(255, 255, 255, 0.08);
+            --input-focus-border: #4a7cf7;
+            --btn-bg: linear-gradient(135deg, #0f2248, #1a3570);
+            --btn-hover: linear-gradient(135deg, #1a3570, #2a5bc7);
+            --error-bg: rgba(60, 20, 20, 0.6);
+            --error-text: #ff7777;
+            --error-border: #ff5555;
+        }
+
+        /* ── Reset & Base ── */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+            background: var(--bg-primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            transition: background 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* ── Animated Background ── */
+        .bg-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .bg-canvas .gradient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.20;
+            animation: floatOrb 22s ease-in-out infinite alternate;
+        }
+
+        .bg-canvas .gradient-orb:nth-child(1) {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, #4a7cf7, #1a3a8a);
+            top: -15%;
+            left: -10%;
+            animation-duration: 26s;
+        }
+
+        .bg-canvas .gradient-orb:nth-child(2) {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, #7c4af7, #3a1a8a);
+            bottom: -15%;
+            right: -10%;
+            animation-duration: 30s;
+            animation-delay: -8s;
+        }
+
+        .bg-canvas .gradient-orb:nth-child(3) {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, #f7b731, #f77a31);
+            top: 40%;
+            left: 60%;
+            animation-duration: 24s;
+            animation-delay: -4s;
+            opacity: 0.10;
+        }
+
+        [data-theme="dark"] .bg-canvas .gradient-orb:nth-child(1) {
+            opacity: 0.12;
+            background: radial-gradient(circle, #2a5bc7, #0f2248);
+        }
+        [data-theme="dark"] .bg-canvas .gradient-orb:nth-child(2) {
+            opacity: 0.10;
+            background: radial-gradient(circle, #5a3bc7, #1a0f48);
+        }
+        [data-theme="dark"] .bg-canvas .gradient-orb:nth-child(3) {
+            opacity: 0.06;
+        }
+
+        @keyframes floatOrb {
+            0% {
+                transform: translate(0, 0) scale(1) rotate(0deg);
+            }
+            33% {
+                transform: translate(50px, -30px) scale(1.05) rotate(5deg);
+            }
+            66% {
+                transform: translate(-20px, 30px) scale(0.95) rotate(-3deg);
+            }
+            100% {
+                transform: translate(30px, -10px) scale(1.02) rotate(2deg);
+            }
+        }
+
+        /* subtle grid overlay */
+        .bg-canvas::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.02) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(255, 255, 255, 0.02) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        /* ── Theme Toggle (positioned top-right) ── */
+        .theme-toggle {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 100px;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.4rem;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            color: var(--text-primary);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.20);
+            transform: scale(1.06) rotate(8deg);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .theme-toggle:active {
+            transform: scale(0.92);
+        }
+
+        [data-theme="dark"] .theme-toggle {
+            background: rgba(255, 255, 255, 0.06);
+            color: #e8edf9;
+        }
+
+        [data-theme="dark"] .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        /* ── Login Box ── */
+        .login-box {
+            width: 100%;
+            max-width: 420px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 44px 40px;
+            border-radius: 28px;
+            border: var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            transition: all 0.4s ease;
+            animation: fadeInUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-box::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 28px;
+            background: radial-gradient(circle at 30% 20%, rgba(42, 91, 199, 0.04), transparent 60%);
+            pointer-events: none;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .login-box:hover {
+            box-shadow: 0 30px 80px rgba(11, 30, 74, 0.12);
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+
+        [data-theme="dark"] .login-box:hover {
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+        }
+
+        /* ── Header ── */
+        .login-box h1 {
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            text-align: center;
+            background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 6px;
+        }
+
+        .login-box .subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin-bottom: 32px;
+            letter-spacing: 0.2px;
+        }
+
+        .login-box .subtitle .emoji {
+            display: inline-block;
+            animation: waveHand 2.5s ease-in-out infinite;
+        }
+
+        @keyframes waveHand {
+            0%,
+            100% {
+                transform: rotate(0deg);
+            }
+            10% {
+                transform: rotate(14deg);
+            }
+            20% {
+                transform: rotate(-8deg);
+            }
+            30% {
+                transform: rotate(14deg);
+            }
+            40% {
+                transform: rotate(-4deg);
+            }
+            50% {
+                transform: rotate(10deg);
+            }
+            60%,
+            100% {
+                transform: rotate(0deg);
+            }
+        }
+
+        /* ── Error Message ── */
+        .error {
+            background: var(--error-bg);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            color: var(--error-text);
+            padding: 14px 18px;
+            margin-bottom: 24px;
+            border-radius: 14px;
+            border-left: 4px solid var(--error-border);
+            font-weight: 500;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: shakeError 0.5s ease;
+        }
+
+        .error::before {
+            content: '⚠️';
+            font-size: 1.2rem;
+        }
+
+        @keyframes shakeError {
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+            20% {
+                transform: translateX(-8px);
+            }
+            40% {
+                transform: translateX(8px);
+            }
+            60% {
+                transform: translateX(-6px);
+            }
+            80% {
+                transform: translateX(6px);
+            }
+        }
+
+        /* ── Form Elements ── */
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            letter-spacing: 0.3px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 18px;
+            margin-bottom: 22px;
+            box-sizing: border-box;
+            background: var(--input-bg);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border: 1px solid var(--input-border);
+            border-radius: 14px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        input::placeholder {
+            color: var(--text-muted);
+            opacity: 0.6;
+        }
+
+        input:focus {
+            border-color: var(--input-focus-border);
+            box-shadow: 0 0 0 4px rgba(42, 91, 199, 0.10);
+            background: var(--input-bg);
+            transform: scale(1.01);
+        }
+
+        [data-theme="dark"] input:focus {
+            box-shadow: 0 0 0 4px rgba(42, 91, 199, 0.15);
+        }
+
+        /* ── Button ── */
+        button {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 14px;
+            background: var(--btn-bg);
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.3px;
+            cursor: pointer;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 8px 32px rgba(26, 58, 138, 0.20);
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.10), transparent);
+            opacity: 0;
+            transition: opacity 0.4s;
+            border-radius: 14px;
+        }
+
+        button:hover::after {
+            opacity: 1;
+        }
+
+        button:hover {
+            background: var(--btn-hover);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 40px rgba(26, 58, 138, 0.30);
+        }
+
+        button:active {
+            transform: scale(0.96);
+        }
+
+        [data-theme="dark"] button {
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.30);
+        }
+
+        [data-theme="dark"] button:hover {
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 480px) {
+            .login-box {
+                padding: 32px 24px;
+                border-radius: 24px;
+            }
+            .login-box h1 {
+                font-size: 1.6rem;
+            }
+            .login-box .subtitle {
+                font-size: 0.85rem;
+                margin-bottom: 24px;
+            }
+            input {
+                padding: 12px 16px;
+                font-size: 0.9rem;
+                margin-bottom: 18px;
+            }
+            button {
+                padding: 14px;
+                font-size: 0.95rem;
+            }
+            .theme-toggle {
+                top: 16px;
+                right: 16px;
+                width: 42px;
+                height: 42px;
+                font-size: 1.2rem;
+            }
+            body {
+                padding: 12px;
+            }
+            .error {
+                font-size: 0.8rem;
+                padding: 12px 14px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .login-box {
+                padding: 24px 16px;
+            }
+            .login-box h1 {
+                font-size: 1.3rem;
+            }
+            input {
+                padding: 10px 14px;
+                font-size: 0.85rem;
+            }
+            button {
+                padding: 12px;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* ── Scrollbar Styling ── */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--text-muted);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ── Animated Background Canvas ── -->
+    <div class="bg-canvas">
+        <div class="gradient-orb"></div>
+        <div class="gradient-orb"></div>
+        <div class="gradient-orb"></div>
+    </div>
+
+    <!-- ── Theme Toggle ── -->
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+        <span id="themeIcon">🌙</span>
+    </button>
+
+    <!-- ── Login Box ── -->
+    <div class="login-box">
+
+        <h1>Benazir Bhutto Shaheed University</h1>
+
+        <div class="subtitle">
+            <span class="emoji">🎓</span> Student Login
+        </div>
+
+        {% if error %}
+        <div class="error">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <label for="student_id">Student ID</label>
+            <input
+                type="text"
+                id="student_id"
+                name="student_id"
+                placeholder="Enter Student ID"
+                required
+                autofocus
+            />
+
+            <label for="password">Password</label>
+            <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Enter Password"
+                required
+            />
+
+            <button type="submit">Login</button>
+        </form>
+
+    </div>
+
+    <script>
+        // ── Dark Mode Toggle ──
+        (function() {
+            const toggle = document.getElementById('themeToggle');
+            const icon = document.getElementById('themeIcon');
+            const currentTheme = localStorage.getItem('theme') || 'light';
+
+            if (currentTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                icon.textContent = '☀️';
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                icon.textContent = '🌙';
+            }
+
+            toggle.addEventListener('click', function() {
+                const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+                if (isDark) {
+                    document.documentElement.removeAttribute('data-theme');
+                    localStorage.setItem('theme', 'light');
+                    icon.textContent = '🌙';
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    localStorage.setItem('theme', 'dark');
+                    icon.textContent = '☀️';
+                }
+                // subtle haptic feedback
+                toggle.style.transform = 'scale(0.92)';
+                setTimeout(() => {
+                    toggle.style.transform = '';
+                }, 200);
+            });
+
+            // optional keyboard shortcut: Alt+D
+            document.addEventListener('keydown', function(e) {
+                if (e.altKey && e.key === 'd') {
+                    e.preventDefault();
+                    toggle.click();
+                }
+            });
+        })();
+    </script>
+
+</body>
+
+</html>
